@@ -1,4 +1,4 @@
-package de.bergsysteme.fogbugz;
+package de.bergsysteme.buggy;
 
 import java.util.Date;
 import java.util.LinkedHashMap;
