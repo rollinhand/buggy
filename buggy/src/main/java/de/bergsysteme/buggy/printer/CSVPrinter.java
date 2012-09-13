@@ -15,7 +15,7 @@
  *  limitations under the License.                                                                                                                               
  *                                                                                                                                                               
  ***************************************************************************/
-package de.bergsysteme.fogbugz.printer;
+package de.bergsysteme.buggy.printer;
 
 import java.io.BufferedWriter;
 import java.io.File;
@@ -26,9 +26,9 @@ import java.lang.reflect.Method;
 import java.util.Hashtable;
 import java.util.logging.Logger;
 
-import de.bergsysteme.fogbugz.Messages;
-import de.bergsysteme.fogbugz.resolve.ObjectInspector;
-import de.bergsysteme.fogbugz.resolve.Processor;
+import de.bergsysteme.buggy.Messages;
+import de.bergsysteme.buggy.resolve.ObjectInspector;
+import de.bergsysteme.buggy.resolve.Processor;
 
 /***
  * Prints the content of FogBugz elements as CSV file.
@@ -102,7 +102,7 @@ public class CSVPrinter implements IPrinter {
 	}
 
 	/* (non-Javadoc)
-	 * @see de.bergsysteme.fogbugz.printer.IPrinter#print(java.lang.String[], java.lang.Object[])
+	 * @see de.bergsysteme.buggy.printer.IPrinter#print(java.lang.String[], java.lang.Object[])
 	 */
 	public void print(String[] columns, Object[] data) throws Exception {
 		int size = columns.length;
