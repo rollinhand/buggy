@@ -108,7 +108,7 @@
   <packaging>pom</packaging>
   <artifactId>general</artifactId>
   <modules>
-  	<module>../fogbugz</module>
+  	<module>../buggy</module>
   </modules>
   <name>Berg Systeme</name>
   <description>Reactor-Project for all Maven projects of Berg Systeme.</description>
