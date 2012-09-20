@@ -19,18 +19,18 @@ implements ResolverListener {
 	};
 
 	public void execute() {
-		logger.log(Level.INFO, "Converter starts.");
+		logger.info("Converter starts.");
 		validateAuthentication("bjoern.berg@numetris.de/20golem09@https://support-numetris.de");
 		try {
 			// Configure command
-			logger.log(Level.FINE, "Configuring Search Command.");
+			logger.trace("Configuring Search Command.");
 			SearchCommand cmd = new SearchCommand();
 			
 			String query = null;
 			//for (int i=0; i < queries.length; ++i) {
 				query = "(project:\"Gas Entwicklung\") (resolved:\"1/1/2012..today\") (category:Feature)";
 				
-				logger.log(Level.INFO, "Active query: " + query);
+				logger.info("Active query: " + query);
 				cmd.setQuery(query);
 				cmd.addColumn("ixBug");
 				cmd.addColumn("dtOpened");
@@ -47,13 +47,13 @@ implements ResolverListener {
 				cmd.addListener(this);
 				
 				// Send request
-				logger.log(Level.FINE, "Sending command to processor.");
+				logger.trace("Sending command to processor.");
 				Processor.setConnection(connection);
 				Processor.execute(cmd);
-				logger.log(Level.INFO, "Processing done.");
+				logger.trace("Processing done.");
 			//}			
 		} catch (FogBugzException e) {
-			logger.log(Level.SEVERE, "Internal Exception.", e);
+			logger.fatal("Internal Exception.", e);
 			e.printStackTrace();
 		}
 	}
@@ -70,9 +70,9 @@ implements ResolverListener {
 	
 	public void notify(List<Object> l) {
 		if (l == null || l.size() == 0) {
-			logger.log(Level.WARNING, "No results.");
+			logger.warn("No results.");
 		} else {
-			logger.log(Level.INFO, "Returned results: " + l.size());
+			logger.info("Returned results: " + l.size());
 			print(l);
 		}
 	}
@@ -84,7 +84,4 @@ implements ResolverListener {
 		InitiatorConverter converter = new InitiatorConverter();
 		converter.execute();
 	}
-
-	
-
 }

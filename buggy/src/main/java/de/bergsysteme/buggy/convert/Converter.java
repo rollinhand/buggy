@@ -3,7 +3,8 @@ package de.bergsysteme.buggy.convert;
 import java.util.Hashtable;
 import java.util.List;
 import java.util.logging.Level;
-import java.util.logging.Logger;
+
+import org.apache.log4j.Logger;
 
 import de.bergsysteme.buggy.Connection;
 import de.bergsysteme.buggy.Error;
@@ -19,7 +20,7 @@ implements ResolverListener, IConverter {
 	protected Hashtable<String, String> table;
 	
 	public Converter() {
-		logger = Logger.getLogger(Processor.PROJECT);
+		logger = Logger.getRootLogger();
 		table = new Hashtable<String, String>();
 		table.put(PROPERTY_FIELDS, "");
 		table.put(PROPERTY_QUERY, "");
@@ -29,14 +30,14 @@ implements ResolverListener, IConverter {
 	
 	protected boolean validateAuthentication(String authentication) {
 		boolean success = false;
-		logger.finest("Authentication String: " + authentication);
+		logger.trace("Authentication String: " + authentication);
 		if (authentication.matches(".*/.*@.*")) {
 			int endOfEmail = authentication.indexOf("/");
 			int endOfPwd = authentication.lastIndexOf("@");
 			String email = authentication.substring(0, endOfEmail);
 			String pwd = authentication.substring(endOfEmail + 1, endOfPwd);
 			String host = authentication.substring(endOfPwd + 1);
-			logger.log(Level.FINEST, String.format("Debug: %s/%s@%s", email, pwd, host));
+			logger.trace(String.format("Debug: %s/%s@%s", email, pwd, host));
 			
 			connection = new Connection();
 			connection.setEmail(email);
@@ -45,7 +46,7 @@ implements ResolverListener, IConverter {
 			
 			success = true;
 		} else {
-			logger.log(Level.WARNING, "Authentication string is not valid.");			
+			logger.warn("Authentication string is not valid.");			
 			success = false;
 		}
 		
@@ -57,9 +58,9 @@ implements ResolverListener, IConverter {
 	 */
 	public void notify(List<Object> l) {
 		if (l == null || l.size() == 0) {
-			logger.log(Level.WARNING, "No results.");
+			logger.warn("No results.");
 		} else {
-			logger.log(Level.INFO, "Returned results: " + l.size());
+			logger.info("Returned results: " + l.size());
 			
 			if (l.size() == 1) {
 				Object obj = l.get(0);

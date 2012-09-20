@@ -1,7 +1,7 @@
 package de.bergsysteme.buggy.resolve;
 
 import java.lang.reflect.Method;
-import java.util.logging.Logger;
+import org.apache.log4j.Logger;
 
 public class ObjectInspector {
 	private Logger logger;
@@ -12,7 +12,7 @@ public class ObjectInspector {
 	
 	private ObjectInspector() {
 		this.cache = new ObjectCache();
-		logger = Logger.getLogger(Processor.PROJECT);
+		logger = Logger.getRootLogger();
 	}
 
 	public static ObjectInspector getInstance() {
@@ -24,7 +24,7 @@ public class ObjectInspector {
 	
 	public Method findSetter(Object obj, String fieldName) {
 		String methodName = MethodFormatter.setMethod(fieldName);
-		logger.finer("Converted '" + fieldName + "' to '" + methodName + "'.");
+		logger.trace("Converted '" + fieldName + "' to '" + methodName + "'.");
 		Class<?> clazz = obj.getClass();
 		Method m = findMethod(clazz, methodName);
 		return m;
@@ -32,14 +32,14 @@ public class ObjectInspector {
 	
 	public Method findGetter(Object obj, String fieldName) {
 		String methodName = MethodFormatter.getMethod(fieldName);
-		logger.finer("Converted '" + fieldName + "' to '" + methodName + "'.");
+		logger.trace("Converted '" + fieldName + "' to '" + methodName + "'.");
 		Class<?> clazz = obj.getClass();
 		Method m = findMethod(clazz, methodName);
 		return m;
 	}
 	
 	private Method findMethod(Class<?> clazz, String methodName) {
-		logger.finer("Trying to resolve Method: " + methodName);
+		logger.trace("Trying to resolve Method: " + methodName);
 		Method m = askCache(clazz, methodName);
 		if (m == null) {
 			if (inspectClazz(clazz)) {
@@ -47,7 +47,7 @@ public class ObjectInspector {
 				// getters and setters for this special class.
 				m = askCache(clazz, methodName);
 			} else {
-				logger.severe("Inspecting class failed.");
+				logger.fatal("Inspecting class failed.");
 			}
 		}
 		return m;
@@ -66,10 +66,10 @@ public class ObjectInspector {
 	private Method askCache(Class<?> clazz, String methodName) {
 		Method m = null;
 		if (cache != null) {
-			logger.finer("Asking Cache for Method with name: " + methodName);
+			logger.trace("Asking Cache for Method with name: " + methodName);
 			m = cache.findMethod(clazz, methodName);
 		} else {
-			logger.warning("Cache is not active.");
+			logger.warn("Cache is not active.");
 		}
 		return m;
 	}
@@ -86,13 +86,13 @@ public class ObjectInspector {
 					// We only accept Strings as parameter
 					Class<?>[] params = m.getParameterTypes();
 					if (params.length == 1 && params[0] == String.class) {
-						logger.fine("Updating Cache. Setter / Getter: " + methodName);
+						logger.trace("Updating Cache. Setter / Getter: " + methodName);
 						cache.updateCache(clazz, methodName, m);
 					} else {
 						logger.info("Rejecting method " + methodName);
 					}
 				} else if (methodName.startsWith("get")) {
-					logger.fine("Updating Cache. Setter / Getter: " + methodName);
+					logger.trace("Updating Cache. Setter / Getter: " + methodName);
 					cache.updateCache(clazz, methodName, m);
 				} else {
 					boolean accepted = true;
@@ -102,14 +102,14 @@ public class ObjectInspector {
 						if (c != String.class) { accepted = false; }
 					}
 					if (accepted) {
-						logger.fine("Updating Cache. Setter / Getter: " + methodName);
+						logger.trace("Updating Cache. Setter / Getter: " + methodName);
 						cache.updateCache(clazz, methodName, m);
 					}
 				}
 			}
 			success = true;
 		} else {
-			logger.warning("No declared methods found.");
+			logger.trace("No declared methods found.");
 		}
 		return success;
 	}

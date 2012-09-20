@@ -26,13 +26,12 @@ extends Converter {
 	
 	public ProviderSessionConverter() {
 		super();
-		logger.setLevel(Level.FINEST);
 		this.setProperty(PROPERTY_PRINTER_NAME, "csv");
 	}
 	
 	@Override
 	public void execute() {
-		logger.finest("Executing ProviderSessionConverter.");
+		logger.trace("Executing ProviderSessionConverter.");
 		validateAuthentication(getProperty(PROPERTY_AUTHENTICATION));
 		try {
 			SearchCommand cmd = prepareCommand();
@@ -63,7 +62,7 @@ extends Converter {
 			Object[] data = list.toArray();
 			printer.print(fields, data);
 		} catch (Exception e) {
-			logger.severe("Printing Exception: " + e.getMessage());
+			logger.fatal("Printing Exception: " + e.getMessage());
 		}
 	}
 	

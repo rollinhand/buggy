@@ -4,7 +4,7 @@ import java.lang.reflect.Method;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.logging.Level;
-import java.util.logging.Logger;
+import org.apache.log4j.Logger;
 
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
@@ -38,8 +38,8 @@ public class ResponseResolver extends DefaultHandler {
 		setterName = null;
 		
 		// instantiate Logger
-		logger = Logger.getLogger(Processor.PROJECT);
-		logger.log(Level.INFO, "Current log level: " + logger.getLevel());
+		logger = Logger.getRootLogger();
+		logger.info("Current log level: " + logger.getLevel());
 	}
 	
 	public void addListener(ResolverListener listener) {
@@ -77,7 +77,7 @@ public class ResponseResolver extends DefaultHandler {
 	}
 
 	public void endElement(String uri, String localName, String name) throws SAXException {
-		logger.log(Level.FINEST, "Found end tag: " + localName);
+		logger.trace( "Found end tag: " + localName);
 		if ("response".equalsIgnoreCase(localName)) {
 			proceed = false;
 			setterName = null;
@@ -101,10 +101,10 @@ public class ResponseResolver extends DefaultHandler {
 				Object obj = buildObjects.get(lastObject);
 				this.setAttribute(obj, this.setterName, content.toString());
 			} else {				
-				logger.log(Level.FINEST, "No objects in build queue.");
+				logger.trace( "No objects in build queue.");
 			}
 		} catch (FogBugzException e) {
-			logger.log(Level.FINEST, "Throwing exception upwards.", e);
+			logger.trace("Throwing exception upwards.", e);
 			throw new SAXException(e);
 		}
 		content.delete(0, content.length());
@@ -118,11 +118,11 @@ public class ResponseResolver extends DefaultHandler {
 			proceed = true; 
 		}
 		if (!proceed) { throw new SAXException("This is not an answer from FogBugz."); }
-		logger.log(Level.FINEST, "Found starting tag: " + localname);
+		logger.trace( "Found starting tag: " + localname);
 		
 		// Is this an indicator to build a new Object?
 		for (String trigger : TRIGGERS) {
-			logger.log(Level.FINEST, "Checking for trigger: " + localname);
+			logger.trace( "Checking for trigger: " + localname);
 			if (trigger.equalsIgnoreCase(localname)) { build_new = true; }
 		}
 		
@@ -171,7 +171,7 @@ public class ResponseResolver extends DefaultHandler {
 					Object obj = buildObjects.get(lastObject);
 					this.setAttribute(obj, setterName, value);
 				} else {
-					logger.log(Level.FINEST, "No objects in build queue.");
+					logger.trace( "No objects in build queue.");
 				}
 			}
 		}
@@ -187,14 +187,14 @@ public class ResponseResolver extends DefaultHandler {
 		
 		// add package
 		className = String.format("%s.%s", PACKAGE, className);
-		logger.log(Level.FINEST, "Created classname from localname: " + className);
+		logger.trace( "Created classname from localname: " + className);
 		
 		// Create the instance and register in list
 		try {
 			Class<?> cls = Class.forName(className);
 			obj = cls.newInstance();
 		} catch (ClassNotFoundException e) {
-			logger.log(Level.SEVERE, "Cannot create an object for " + className);
+			logger.trace( "Cannot create an object for " + className);
 			throw new FogBugzException("Cannot create an object for " + className);
 		} catch (Exception e) {
 			throw new FogBugzException(e);
@@ -210,7 +210,7 @@ public class ResponseResolver extends DefaultHandler {
 			if (thisMethod != null) {
 				thisMethod.invoke(obj, value);
 			} else {
-				logger.warning("Setter unknown. Using fallback strategy.");
+				logger.warn("Setter unknown. Using fallback strategy.");
 				useFallback(obj, setterName, value);
 			}
 		} catch (Exception e) {
@@ -227,7 +227,7 @@ public class ResponseResolver extends DefaultHandler {
 				logger.info(String.format("Setting userdefined field: %s[value=%s]", fieldName, value));
 				method.invoke(obj, valueArray);
 			} else {
-				logger.severe("Fallback strategy failed. Cannot use userdefined fields.");
+				logger.fatal("Fallback strategy failed. Cannot use userdefined fields.");
 			}
 		} catch (Exception e) {
 			throw new FogBugzException(e);
@@ -236,7 +236,7 @@ public class ResponseResolver extends DefaultHandler {
 	
 	private void notifyListeners() {		
 		for (ResolverListener l : listeners) { 
-			logger.log(Level.FINEST, "Work done. Notifying: " + l.toString());
+			logger.trace( "Work done. Notifying: " + l.toString());
 			l.notify(buildObjects); 
 		}
 	}

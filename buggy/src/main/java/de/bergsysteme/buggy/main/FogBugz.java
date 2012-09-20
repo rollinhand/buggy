@@ -1,10 +1,9 @@
 package de.bergsysteme.buggy.main;
 
-import java.util.logging.Logger;
+import org.apache.log4j.Logger;
 
 import de.bergsysteme.buggy.printer.IPrinter;
 import de.bergsysteme.buggy.printer.PrinterFactory;
-import de.bergsysteme.buggy.resolve.Processor;
 
 public class FogBugz {
 	private Logger logger;
@@ -14,7 +13,7 @@ public class FogBugz {
 	private String filename;
 	
 	public FogBugz() {
-		this.logger = Logger.getLogger(Processor.PROJECT);
+		this.logger = Logger.getRootLogger();
 	}
 
 	public String getQuery() {

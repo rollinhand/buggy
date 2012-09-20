@@ -46,7 +46,7 @@ extends Converter {
 			setProperty(PROPERTY_PROJECT, project);
 			success = validateAuthentication(authentication);
 		} else {
-			logger.log(Level.SEVERE, "Not enough arguments.");
+			logger.fatal("Not enough arguments.");
 			usage();
 			success = false;
 		}
@@ -59,7 +59,7 @@ extends Converter {
 			Processor.setConnection(connection);
 			Processor.execute(cmd);	
 		} catch (FogBugzException e) {
-			logger.log(Level.SEVERE, "Internal Exception.", e);
+			logger.fatal("Internal Exception.", e);
 			e.printStackTrace();
 		}
 	}
@@ -90,7 +90,7 @@ extends Converter {
 			printer.print(fields, data);
 		} catch (Exception e) {
 			e.printStackTrace();
-			logger.severe("Printing Exception: " + e.getMessage());
+			logger.fatal("Printing Exception: " + e.getMessage());
 		}
 	}
 

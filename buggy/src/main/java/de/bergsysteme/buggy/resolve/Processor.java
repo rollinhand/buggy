@@ -2,7 +2,7 @@ package de.bergsysteme.buggy.resolve;
 
 import java.util.List;
 import java.util.logging.Level;
-import java.util.logging.Logger;
+import org.apache.log4j.Logger;
 
 import de.bergsysteme.buggy.Api;
 import de.bergsysteme.buggy.Connection;
@@ -38,8 +38,7 @@ public class Processor implements ResolverListener {
 		token = new Token();	// empty Dummy
 		
 		// Instantiate Logger
-		logger = Logger.getLogger(PROJECT);
-		logger.setLevel(Level.FINEST);
+		logger = Logger.getRootLogger();
 	}
 	
 	protected static Processor getInstance() {
@@ -81,7 +80,7 @@ public class Processor implements ResolverListener {
 	}
 	
 	private static void checkApi () throws FogBugzException {		
-		logger.log(Level.INFO, "Trying to detect the api page to call.");
+		logger.info("Trying to detect the api page to call.");
 		checkingApi = true;
 		ApiCommand api = new ApiCommand();
 		execute(api);
@@ -91,12 +90,12 @@ public class Processor implements ResolverListener {
 		if (getPage() == null && !checkingApi) { checkApi(); }
 		
 		if (!checkingApi && !loggedIn) {
-			logger.log(Level.INFO, "Token was not set. Trying to login.");			
+			logger.info("Token was not set. Trying to login.");			
 			login(); 
 			if (getToken().getToken() != null) {
-				logger.log(Level.INFO, "Login was successful: " + getToken().getToken());
+				logger.info("Login was successful: " + getToken().getToken());
 			} else {
-				logger.log(Level.SEVERE, "Login failed.");
+				logger.warn( "Login failed.");
 			}
 		}
 		
@@ -106,7 +105,7 @@ public class Processor implements ResolverListener {
 		URLFetcher.setToken(getToken());
 		URLFetcher.setRequestPage(getPage());
 		String uri = URLFetcher.generateRequest();
-		logger.log(Level.FINE, "Using URL for request: " + uri);
+		logger.trace( "Using URL for request: " + uri);
 		
 		// Execute command
 		command.addListener(Processor.getInstance());
@@ -114,7 +113,7 @@ public class Processor implements ResolverListener {
 	}
 
 	public void notify(List<Object> l) {
-		logger.log(Level.FINEST, "Processor was notified by ResponseResolver.");
+		logger.trace ("Processor was notified by ResponseResolver.");
 		if (l != null) { workOnList(l); }
 	}
 	
@@ -125,21 +124,21 @@ public class Processor implements ResolverListener {
 			if (obj instanceof Token) {
 				setToken((Token)obj);
 				loggedIn = true;
-				logger.log(Level.FINEST, "Token was returned by request.");
+				logger.trace ("Token was returned by request.");
 			} else if (obj instanceof Api) {
 				Api api = (Api) obj;
 				String url = api.getUrl();
 				url = url.replace("?", "");
 				setPage(url);
 				checkingApi = false;
-				logger.log(Level.FINEST, "API request was succesful.");
-				logger.log(Level.FINEST, String.format("FogBugz version: %d.%d", api.getVersion(), api.getMinversion()));
+				logger.trace( "API request was succesful.");
+				logger.trace( api.getMinversion());
 			} else if (obj instanceof Error) {
 				Error error = (Error) obj;				
-				logger.log(Level.SEVERE, "Error in processing instructions: " + error.getError() + ", Code: " + error.getCode());
-				logger.log(Level.SEVERE, ErrorCode.translateCode(error.getCode()));
+				logger.warn( "Error in processing instructions: " + error.getError() + ", Code: " + error.getCode());
+				logger.warn( ErrorCode.translateCode(error.getCode()));
 			} else {
-				logger.log(Level.FINEST, "List does not contain objects for Processor.");				
+				logger.trace( "List does not contain objects for Processor.");				
 			}
 		}
 	}
