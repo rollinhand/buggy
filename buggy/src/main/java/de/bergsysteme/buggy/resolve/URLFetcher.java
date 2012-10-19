@@ -42,18 +42,18 @@ public class URLFetcher {
 		escapeMap.put("ß", "%DF");		
 		escapeMap.put(" ", "%20");
 		escapeMap.put(";", "%3B");
-		escapeMap.put("|", "%7C");
+		escapeMap.put("\\|", "%7C");
 		escapeMap.put("<", "%3C");
 		escapeMap.put(">", "%3E");
 		escapeMap.put("#", "%23");
 		escapeMap.put("%", "%25");
-		escapeMap.put("{", "%7B");
-		escapeMap.put("}", "%7D");
-		escapeMap.put("\\", "%5C");
-		escapeMap.put("^", "%5E");
-		escapeMap.put("[", "%5B");
-		escapeMap.put("]", "%5D");
-		escapeMap.put("?", "%3F");
+		escapeMap.put("\\{", "%7B");
+		escapeMap.put("\\}", "%7D");
+		//escapeMap.put("\\", "%5C");
+		escapeMap.put("\\^", "%5E");
+		escapeMap.put("\\[", "%5B");
+		escapeMap.put("\\]", "%5D");
+		//escapeMap.put("\\?", "%3F");
 	}
 	
 	protected static URLFetcher getInstance() {

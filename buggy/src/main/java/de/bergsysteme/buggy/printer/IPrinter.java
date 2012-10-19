@@ -19,6 +19,7 @@ package de.bergsysteme.buggy.printer;
 
 import de.bergsysteme.buggy.Case;
 import de.bergsysteme.buggy.Project;
+import de.bergsysteme.buggy.writer.BugWriter;
 
 /***
  * Generic Interface for all registered printers. 
@@ -31,6 +32,7 @@ import de.bergsysteme.buggy.Project;
  * @author Bjoern Berg, bjoern.berg@gmx.de
  * @version 1.0
  * @since 2012-07-31
+ * @deprecated use {@link BugWriter} interface instead.
  */
 public interface IPrinter {
 	/***

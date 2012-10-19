@@ -1,20 +1,24 @@
 package de.bergsysteme.buggy.convert;
 
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.util.List;
-import java.util.logging.Level;
 
 import de.bergsysteme.buggy.FogBugzException;
 import de.bergsysteme.buggy.command.SearchCommand;
 import de.bergsysteme.buggy.printer.IPrinter;
 import de.bergsysteme.buggy.printer.PrinterFactory;
 import de.bergsysteme.buggy.resolve.Processor;
+import de.bergsysteme.buggy.writer.BugWriter;
+import de.bergsysteme.buggy.writer.ExcelBugWriter;
 
 public class ProviderSessionConverter
 extends Converter {
 			
 	private final String[] queries = {
 		"(project:\"Support OGE\" OR project:\"en|damo Entwicklung\") (resolved:\"last week\")",
-		"(project:\"Support OGE\" OR project:\"en|damo Entwicklung\") (opened:\"last week\")"
+		//"(project:\"Support OGE\" OR project:\"en|damo Entwicklung\") (opened:\"last week\")"
 	};
 	
 	private String[] fields = { "ixBug", "dtOpened", "sTitle", "sProject", "sStatus", 
@@ -55,7 +59,7 @@ extends Converter {
 
 	@Override
 	protected void print(List<Object> list) {
-		try {
+		/*try {
 			String printerName = getProperty(PROPERTY_PRINTER_NAME, "csv");
 			IPrinter printer = PrinterFactory.getInstance().findPrinterByName(printerName);
 			printer.setProperty("file", String.format("%s.csv", prefix[run]));
@@ -63,6 +67,19 @@ extends Converter {
 			printer.print(fields, data);
 		} catch (Exception e) {
 			logger.fatal("Printing Exception: " + e.getMessage());
+		}*/
+		
+		try {
+			BugWriter writer = new ExcelBugWriter(new FileOutputStream("workbook.xls"));
+			Object[] data = list.toArray();
+			writer.write(fields, data);
+			writer.close();
+		} catch (FileNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
 	}
 	

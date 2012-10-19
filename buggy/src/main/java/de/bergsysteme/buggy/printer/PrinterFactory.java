@@ -19,12 +19,15 @@ package de.bergsysteme.buggy.printer;
 
 import java.util.Hashtable;
 
+import de.bergsysteme.buggy.writer.BugWriter;
+
 /***
  * Retrieves an instance of {@link IPrinter} by its given name.
  * 
  * @author Björn Berg, bjoern.berg@gmx.de
  * @version 1.0
  * @since 2012-07-31
+ * @deprecated use {@link BugWriter} interface.
  */
 public class PrinterFactory {
 	private static PrinterFactory _instance;
