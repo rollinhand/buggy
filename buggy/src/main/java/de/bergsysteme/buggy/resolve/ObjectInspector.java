@@ -82,29 +82,29 @@ public class ObjectInspector {
 		if (declMethods != null && declMethods.length > 0) {
 			for (Method m : declMethods) {
 				String methodName = m.getName();
+				Class<?>[] params = m.getParameterTypes();
 				if (methodName.startsWith("set")) {
 					// We only accept Strings as parameter
-					Class<?>[] params = m.getParameterTypes();
 					if (params.length == 1 && params[0] == String.class) {
 						logger.trace("Updating Cache. Setter / Getter: " + methodName);
 						cache.updateCache(clazz, methodName, m);
-					} else {
-						logger.info("Rejecting method " + methodName);
-					}
-				} else if (methodName.startsWith("get")) {
-					logger.trace("Updating Cache. Setter / Getter: " + methodName);
-					cache.updateCache(clazz, methodName, m);
-				} else {
-					boolean accepted = true;
-					// For Fallback. Must be all Strings
-					Class<?>[] params = m.getParameterTypes();
-					for (Class<?> c : params) {
-						if (c != String.class) { accepted = false; }
-					}
-					if (accepted) {
+					} else if (params.length == 2 && params[0] == String.class && params[1] == String.class) {
+						// For Fallback. Must be all Strings
 						logger.trace("Updating Cache. Setter / Getter: " + methodName);
 						cache.updateCache(clazz, methodName, m);
+					} else {
+						logger.trace("Rejecting method " + methodName);
 					}
+				} else if (methodName.startsWith("get")) {
+					if (params.length <= 1) {
+						logger.trace("Updating Cache. Setter / Getter: " + methodName);
+						cache.updateCache(clazz, methodName, m);
+					} else {
+						logger.trace("Rejecting method " + methodName);
+					}
+				} else if (methodName.startsWith("is")) {
+					logger.trace("Updating Cache. Setter / Getter: " + methodName);
+					cache.updateCache(clazz, methodName, m);
 				}
 			}
 			success = true;
