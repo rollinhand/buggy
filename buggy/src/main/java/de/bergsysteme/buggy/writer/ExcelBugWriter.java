@@ -28,7 +28,7 @@ public class ExcelBugWriter extends BugWriter {
 	
 	public void write(String sheetName, String[] fieldnames, Object[] values) throws IOException {
 		// Create a new sheet.
-		// TODO If sheet empty, construct a symbolic name.
+		if (sheetName == null) { sheetName = "No Name"; }
 		String safeName = WorkbookUtil.createSafeSheetName(sheetName); 
 		activeSheet = workbook.createSheet(safeName);
 		// First row (0) contains the translated column names.
@@ -36,7 +36,8 @@ public class ExcelBugWriter extends BugWriter {
 		// Following rows contain the body or workload.
 		writeBody(fieldnames, values);
 		// After the model is created in memory write it down.
-		workbook.write(out);
+		// Removed: see override of close()
+		// workbook.write(out);
 	}
 
 	private void writeHeader(String[] fieldnames) {
@@ -50,7 +51,6 @@ public class ExcelBugWriter extends BugWriter {
 	
 	private void writeBody(String[] fieldnames, Object[] values) {
 		int rowIndex = 1;
-		
 		for (Object data : values) {
 			Row row = activeSheet.createRow(rowIndex++);
 			for (int index = 0; index < fieldnames.length; ++index) {
@@ -59,5 +59,17 @@ public class ExcelBugWriter extends BugWriter {
 				cell.setCellValue(value);
 			}
 		}
+	}
+
+	@Override
+	public void close() throws IOException {
+		// This is a hack:
+		// Excel model must be completely build up into memory before it can be
+		// written to file. If we have more then one sheet per file, the following
+		// sheets are not written. So we have to call write for the workbook before
+		// closing the writer instance.
+		workbook.write(out);
+		out.flush();
+		out.close();
 	}
 }
