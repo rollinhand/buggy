@@ -6,6 +6,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
 import de.bergsysteme.buggy.resolve.ObjectInspector;
+import de.bergsysteme.buggy.resolve.ObjectInspector.TYPE;
 
 public abstract class BugWriter {
 	protected OutputStream out;
@@ -23,6 +24,7 @@ public abstract class BugWriter {
 	 * @throws IOException
 	 */
 	public void close() throws IOException {
+		out.flush();
 		out.close();
 	}
 	
@@ -39,8 +41,15 @@ public abstract class BugWriter {
 		String value = null;
 		try {
 			Method m = ObjectInspector.getInstance().findGetter(data, fieldname);
-			if (m != null) {
-				Object result = m.invoke(data, (Object[])null);
+			Object result = null;
+			if (m == null) {
+				m = ObjectInspector.getInstance().findFallBackMethod(data.getClass(), fieldname, TYPE.GET); 
+				Object[] params = {fieldname};
+				result = m.invoke(data, params);
+			} else {
+				result = m.invoke(data, (Object[])null);
+			}
+			if (result != null) {
 				value = String.valueOf(result);
 			}
 		} catch (IllegalAccessException e) {
