@@ -1,11 +1,18 @@
 package de.bergsysteme.buggy.main;
 
+import java.util.List;
+
 import org.apache.log4j.Logger;
 
+import de.bergsysteme.buggy.FogBugzException;
+import de.bergsysteme.buggy.command.ICommand;
+import de.bergsysteme.buggy.command.ListPeopleCommand;
+import de.bergsysteme.buggy.convert.Converter;
 import de.bergsysteme.buggy.printer.IPrinter;
 import de.bergsysteme.buggy.printer.PrinterFactory;
+import de.bergsysteme.buggy.resolve.Processor;
 
-public class FogBugz {
+public class FogBugz extends Converter {
 	private Logger logger;
 	private String query;
 	private String[] columns;
@@ -96,15 +103,39 @@ public class FogBugz {
 			}
 		}
 	}
+	
+	public void execute() {
+		validateAuthentication("bjoern.berg@numetris.de/20golem09@https://support-numetris.de");
+		try {
+			ICommand cmd = new ListPeopleCommand();
+			cmd.addListener(this);
+			
+			// Send request
+			Processor.setConnection(connection);
+			Processor.execute(cmd);
+		} catch (FogBugzException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	
 
 	/**
 	 * @param args
 	 */
 	public static void main(String[] args) {
 		FogBugz fb = new FogBugz();
-		String chain = fb.concatArguments(args);
-		fb.splitArguments(chain);
-
+		fb.execute();
+		/*String chain = fb.concatArguments(args);
+		fb.splitArguments(chain);*/
+		
+		
 	}
 
+	@Override
+	protected void print(List<Object> list) {
+		for (Object o : list) {
+			System.out.println(o);
+		}
+	}
 }
