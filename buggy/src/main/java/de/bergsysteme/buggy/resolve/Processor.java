@@ -105,7 +105,7 @@ public class Processor implements ResolverListener {
 		URLFetcher.setToken(getToken());
 		URLFetcher.setRequestPage(getPage());
 		String uri = URLFetcher.generateRequest();
-		logger.trace( "Using URL for request: " + uri);
+		logger.info( "Using URL for request: " + uri);
 		
 		// Execute command
 		command.addListener(Processor.getInstance());

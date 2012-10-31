@@ -29,7 +29,9 @@ public class ResponseResolver extends DefaultHandler {
 	private StringBuffer content = new StringBuffer();
 	
 	// Trigger to build a new object
-	private static final String[] TRIGGERS = {"error", "token", "case", "event", "area", "project", "area", "fixfor", "priority", "category", "person"};
+	private static final String[] TRIGGERS = {"error", "token", "case", "event", "area", 
+											  "project", "area", "fixfor", "priority", 
+											  "category", "person", "interval"};
 	
 	public ResponseResolver() {
 		proceed = false;
