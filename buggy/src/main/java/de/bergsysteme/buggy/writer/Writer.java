@@ -8,14 +8,14 @@ import java.lang.reflect.Method;
 import de.bergsysteme.buggy.resolve.ObjectInspector;
 import de.bergsysteme.buggy.resolve.ObjectInspector.TYPE;
 
-public abstract class BugWriter {
+public abstract class Writer {
 	protected OutputStream out;
 	
 	/***
 	 * Create a new character-stream writer.
 	 * @param out
 	 */
-	public BugWriter(OutputStream out) {
+	public Writer(OutputStream out) {
 		this.out = out;
 	}
 

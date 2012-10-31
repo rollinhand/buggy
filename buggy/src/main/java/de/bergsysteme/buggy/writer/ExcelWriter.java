@@ -12,11 +12,11 @@ import org.apache.poi.ss.util.WorkbookUtil;
 
 import de.bergsysteme.buggy.resolve.Field;
 
-public class ExcelBugWriter extends BugWriter {
+public class ExcelWriter extends Writer {
 	private Workbook workbook;
 	private Sheet activeSheet;
 	
-	public ExcelBugWriter(OutputStream out) {
+	public ExcelWriter(OutputStream out) {
 		super(out);
 		workbook = new HSSFWorkbook();
 	}
