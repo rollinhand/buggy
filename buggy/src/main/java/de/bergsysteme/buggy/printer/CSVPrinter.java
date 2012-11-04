@@ -24,7 +24,7 @@ import java.io.PrintWriter;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.Hashtable;
-import java.util.logging.Logger;
+import org.apache.log4j.Logger;
 
 import de.bergsysteme.buggy.Messages;
 import de.bergsysteme.buggy.resolve.ObjectInspector;
@@ -71,7 +71,7 @@ public class CSVPrinter implements IPrinter {
 	}
 	
 	public CSVPrinter() {
-		this.logger = Logger.getLogger(Processor.PROJECT);
+		this.logger = Logger.getRootLogger();
 		this.availableColumns = null;
 		properties = new Hashtable<String, String>();
 		properties.put(DATASET_DELIMITER, System.getProperty("line.separator"));
@@ -107,7 +107,7 @@ public class CSVPrinter implements IPrinter {
 	public void print(String[] columns, Object[] data) throws Exception {
 		int size = columns.length;
 		if (size == 0) {
-			logger.warning("No columns given.");
+			logger.warn("No columns given.");
 			return;
 		}
 		if (out == null) {
@@ -140,7 +140,7 @@ public class CSVPrinter implements IPrinter {
 			out.println(head);
 			messageFields = null;
 		} else {
-			logger.severe("Column names cannot be null.");
+			logger.fatal("Column names cannot be null.");
 		}
 	}
 	
@@ -183,7 +183,7 @@ public class CSVPrinter implements IPrinter {
 						Object result = m.invoke(obj, (Object[])null);
 						printableData[index++] = String.valueOf(result);
 					} else {
-						logger.severe("Column " + fieldName + " unknown.");
+						logger.warn("Column " + fieldName + " unknown.");
 					}
 				}
 				String format = createFormatString(size);

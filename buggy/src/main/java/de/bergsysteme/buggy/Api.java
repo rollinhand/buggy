@@ -1,8 +1,18 @@
 package de.bergsysteme.buggy;
 
+/***
+ * Container for FogBugz API information. This is used internally
+ * while connecting with the server where FogBugz is hosted.
+ * @author Björn Berg, bjoern.berg@gmx.de
+ * @since 2012-09-13
+ * @version 1.0
+ */
 public class Api {
+	// major version
 	private int version;
+	// minimum version
 	private int minversion;
+	// URL to connect to ending on asp or php
 	private String url;
 	
 	public int getVersion() {

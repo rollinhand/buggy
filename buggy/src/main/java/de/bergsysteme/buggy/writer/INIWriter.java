@@ -15,64 +15,57 @@
  *  limitations under the License.                                                                                                                               
  *                                                                                                                                                               
  ***************************************************************************/
-package de.bergsysteme.buggy.printer;
+package de.bergsysteme.buggy.writer;
 
-import de.bergsysteme.buggy.Case;
-import de.bergsysteme.buggy.Project;
-import de.bergsysteme.buggy.writer.Writer;
+import java.io.BufferedWriter;
+import java.io.IOException;
+import java.io.OutputStream;
+import java.io.OutputStreamWriter;
+
+import de.bergsysteme.buggy.resolve.Field;
 
 /***
- * Generic Interface for all registered printers. 
- * Only printers which implement this interface can be used as printer. 
- * Every printer can be configured using setProperty.
- * Keys should be unique between all printers because outer programs can influence the
- * settings for a printer.
- * If the printer has to send the output to a file, work with the property key 'file'.
+ * Writes the received data to a file in INI-Format.
  * 
- * @author Bjoern Berg, bjoern.berg@gmx.de
+ * @author Björn Berg, bjoern.berg@gmx.de
  * @version 1.0
- * @since 2012-07-31
- * @deprecated use {@link Writer} interface instead.
+ * @since 2012-10-30
+ *
  */
-public interface IPrinter {
-	/***
-	 * Prints the content of FogBugz elements.
-	 * Columns represent the fields inside the FogBugz element represented by data.
-	 * Data is an array of FogBugz elements, like {@link Case} or {@link Project}.
-	 * 
-	 * @param columns the fields which should be printed.
-	 * @param data FogBugz elements.
-	 */
-	public abstract void print(String[] columns, Object[] data) throws Exception;
+public class INIWriter extends Writer {
+	private static final String DATASET_FORMAT = "%s = %s";
+	private static final String HEADER_FORMAT = "[%s %d]";
+	private BufferedWriter bwriter;
 	
-	/***
-	 * Calls the Hashtable method put. Provided for parallelism with the getProperty method. 
-	 * Enforces use of strings for property keys and values. The value returned is the 
-	 * result of the Hashtable call to put. 
-	 * @param key the key to be placed into this property list.
-	 * @param value the value corresponding to key.
-	 */
-	public abstract void setProperty(String key, String value);
+	public INIWriter() {
+		this(null);
+	}
 	
-	/***
-	 * Searches for the property with the specified key in this property list.
-	 * @param key the hashtable key.
-	 * @return the value in this property list with the specified key value.
-	 */
-	public abstract String getProperty(String key);
-	
-	/***
-	 * Searches for the property with the specified key in this property list. 
-	 * The method returns the default value argument if the property is not found. 
-	 * @param key the hashtable key.
-	 * @param a default value.
-	 * @return the value in this property list with the specified key value.
-	 */
-	public abstract String getProperty(String key, String defaultValue);
-	
-	/***
-	 * Returns a string array of all the keys in this property list.
-	 * @return a string array of all keys.
-	 */
-	public abstract String[] propertyNames();
+	protected INIWriter(OutputStream out) {
+		super(out);
+		bwriter = new BufferedWriter(new OutputStreamWriter(out));
+	}
+
+	@Override
+	public void write(String[] fieldnames, Object[] values) throws IOException {
+		for (int valueIndex=0; valueIndex < values.length; ++valueIndex) {
+			bwriter.write(String.format(HEADER_FORMAT, "Dataset ", valueIndex + 1));
+			for (int fieldIndex=0; fieldIndex < fieldnames.length; ++fieldIndex) {
+				// Get the key for output
+				String fieldname = fieldnames[fieldIndex];
+				String key = Field.translate(fieldname);
+				// Get the value for output
+				Object data = values[valueIndex];
+				String value = getValue(fieldname, data);
+				// Organize data and print it to console
+				bwriter.write(String.format(DATASET_FORMAT, key, value));
+			}
+		}
+	}
+
+	@Override
+	public void close() throws IOException {
+		bwriter.flush();
+		bwriter.close();		
+	}
 }

@@ -1,11 +1,13 @@
-package de.bergsysteme.buggy.convert;
+package de.numetris.buggy.converter;
 
 import java.util.List;
 import java.util.Properties;
 import java.util.logging.Level;
 
 import de.bergsysteme.buggy.FogBugzException;
+import de.bergsysteme.buggy.command.ReleaseNotesCommand;
 import de.bergsysteme.buggy.command.SearchCommand;
+import de.bergsysteme.buggy.convert.Converter;
 import de.bergsysteme.buggy.printer.IPrinter;
 import de.bergsysteme.buggy.printer.LaTeXPrinter;
 import de.bergsysteme.buggy.printer.PrinterFactory;
@@ -38,7 +40,7 @@ extends Converter {
 	
 	private boolean splitArguments(String[] args) {
 		boolean success = false;
-		if (args.length == 3) {
+		if (args.length >= 2) {
 			String authentication = args[0];
 			String project = args[1];
 			String target = args[2];
@@ -46,7 +48,7 @@ extends Converter {
 			setProperty(PROPERTY_PROJECT, project);
 			success = validateAuthentication(authentication);
 		} else {
-			logger.log(Level.SEVERE, "Not enough arguments.");
+			logger.fatal("Not enough arguments.");
 			usage();
 			success = false;
 		}
@@ -55,27 +57,21 @@ extends Converter {
 	
 	public void execute() {
 		try {
-			SearchCommand cmd = prepareCommand();
+			String target = getProperty(PROPERTY_TARGET);
+			String project = getProperty(PROPERTY_PROJECT);
+			
+			ReleaseNotesCommand cmd = new ReleaseNotesCommand();
+			cmd.setProject(project);
+			cmd.setFixFor(target);
+			cmd.addListener(this);
+			logger.info("Command is: " + cmd.toString());
+			
 			Processor.setConnection(connection);
 			Processor.execute(cmd);	
 		} catch (FogBugzException e) {
-			logger.log(Level.SEVERE, "Internal Exception.", e);
+			logger.fatal("Internal Exception.", e);
 			e.printStackTrace();
 		}
-	}
-	
-	private SearchCommand prepareCommand() {
-		SearchCommand cmd = new SearchCommand();
-		String target = getProperty(PROPERTY_TARGET);
-		String project = getProperty(PROPERTY_PROJECT);
-		String query = String.format("fixfor:%s AND project:%s", target, project);
-		cmd.setQuery(query);
-		cmd.addColumn("ixBug");
-		cmd.addColumn("sCategory");
-		cmd.addColumn("sTitle");
-		cmd.addColumn("sReleaseNotes");
-		cmd.addListener(this);
-		return cmd;
 	}
 	
 	@Override
@@ -90,7 +86,7 @@ extends Converter {
 			printer.print(fields, data);
 		} catch (Exception e) {
 			e.printStackTrace();
-			logger.severe("Printing Exception: " + e.getMessage());
+			logger.fatal("Printing Exception: " + e.getMessage());
 		}
 	}
 

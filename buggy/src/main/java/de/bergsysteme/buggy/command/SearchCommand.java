@@ -25,6 +25,10 @@ public class SearchCommand extends DefaultCommand {
 		columns.add(column);
 	}
 	
+	public void addColumns(String[] columns) {
+		for (String col : columns) { this.addColumn(col); }
+	}
+	
 	protected String getSeparatedColumns() {
 		StringBuffer separated = new StringBuffer();
 		String value = null;

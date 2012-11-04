@@ -15,64 +15,56 @@
  *  limitations under the License.                                                                                                                               
  *                                                                                                                                                               
  ***************************************************************************/
-package de.bergsysteme.buggy.printer;
+package de.bergsysteme.buggy.writer;
 
-import de.bergsysteme.buggy.Case;
-import de.bergsysteme.buggy.Project;
+import java.util.Hashtable;
+
 import de.bergsysteme.buggy.writer.Writer;
 
 /***
- * Generic Interface for all registered printers. 
- * Only printers which implement this interface can be used as printer. 
- * Every printer can be configured using setProperty.
- * Keys should be unique between all printers because outer programs can influence the
- * settings for a printer.
- * If the printer has to send the output to a file, work with the property key 'file'.
+ * Retrieves an instance of {@link Writer} by its given name.
  * 
- * @author Bjoern Berg, bjoern.berg@gmx.de
+ * @author Björn Berg, bjoern.berg@gmx.de
  * @version 1.0
- * @since 2012-07-31
- * @deprecated use {@link Writer} interface instead.
+ * @since 2012-10-30
  */
-public interface IPrinter {
-	/***
-	 * Prints the content of FogBugz elements.
-	 * Columns represent the fields inside the FogBugz element represented by data.
-	 * Data is an array of FogBugz elements, like {@link Case} or {@link Project}.
-	 * 
-	 * @param columns the fields which should be printed.
-	 * @param data FogBugz elements.
-	 */
-	public abstract void print(String[] columns, Object[] data) throws Exception;
+public class WriterFactory {
+	private static WriterFactory _instance;
+	private Hashtable<String, Class<?>> table;
+	
+	private WriterFactory() {
+		this.table = new Hashtable<String, Class<?>>();
+		this.table.put("excel", ExcelWriter.class);
+		this.table.put("console", ConsoleWriter.class);
+	}
 	
 	/***
-	 * Calls the Hashtable method put. Provided for parallelism with the getProperty method. 
-	 * Enforces use of strings for property keys and values. The value returned is the 
-	 * result of the Hashtable call to put. 
-	 * @param key the key to be placed into this property list.
-	 * @param value the value corresponding to key.
+	 * Returns the instance of {@link WriterFactory}.
+	 * @return current instance of {@link WriterFactory}.
 	 */
-	public abstract void setProperty(String key, String value);
+	public static WriterFactory getInstance() {
+		if (_instance == null) {
+			_instance = new WriterFactory();
+		}
+		return _instance;
+	}
 	
 	/***
-	 * Searches for the property with the specified key in this property list.
-	 * @param key the hashtable key.
-	 * @return the value in this property list with the specified key value.
+	 * Returns an instance of {@link Writer}.
+	 * The writer is searched by its name. If the given name is not supported,
+	 * the method will throw an {@link IllegalArgumentException}. In case of an
+	 * error during instantiation of the object appropriate exceptions are thrown.
+	 * @param name name of the writer.
+	 * @return instance of writer.
+	 * @throws IllegalAccessException  
+	 * @throws InstantiationException
 	 */
-	public abstract String getProperty(String key);
-	
-	/***
-	 * Searches for the property with the specified key in this property list. 
-	 * The method returns the default value argument if the property is not found. 
-	 * @param key the hashtable key.
-	 * @param a default value.
-	 * @return the value in this property list with the specified key value.
-	 */
-	public abstract String getProperty(String key, String defaultValue);
-	
-	/***
-	 * Returns a string array of all the keys in this property list.
-	 * @return a string array of all keys.
-	 */
-	public abstract String[] propertyNames();
+	public Writer findWriterByName(String name) 
+	throws InstantiationException, IllegalAccessException {
+		Class<?> clazz = table.get(name);
+		if (clazz == null) {
+			throw new IllegalArgumentException("Writer is not supported: " + name);
+		}
+		return (Writer) clazz.newInstance();
+	}
 }
