@@ -17,9 +17,9 @@
  ***************************************************************************/
 package de.bergsysteme.buggy.writer;
 
+import java.io.OutputStream;
+import java.lang.reflect.Constructor;
 import java.util.Hashtable;
-
-import de.bergsysteme.buggy.writer.Writer;
 
 /***
  * Retrieves an instance of {@link Writer} by its given name.
@@ -36,6 +36,7 @@ public class WriterFactory {
 		this.table = new Hashtable<String, Class<?>>();
 		this.table.put("excel", ExcelWriter.class);
 		this.table.put("console", ConsoleWriter.class);
+		this.table.put("ini", IniWriter.class);
 	}
 	
 	/***
@@ -60,11 +61,22 @@ public class WriterFactory {
 	 * @throws InstantiationException
 	 */
 	public Writer findWriterByName(String name) 
-	throws InstantiationException, IllegalAccessException {
+	throws Exception {
 		Class<?> clazz = table.get(name);
 		if (clazz == null) {
 			throw new IllegalArgumentException("Writer is not supported: " + name);
 		}
 		return (Writer) clazz.newInstance();
+	}
+	
+	public Writer findWriterByName(String name, OutputStream out) 
+	throws Exception {
+		Class<?> clazz = table.get(name);
+		if (clazz == null) {
+			throw new IllegalArgumentException("Writer is not supported: " + name);
+		}
+		Constructor<?> constructor = clazz.getConstructor(OutputStream.class);
+		return (Writer)constructor.newInstance(out);
+		//return (Writer) clazz.newInstance();
 	}
 }
