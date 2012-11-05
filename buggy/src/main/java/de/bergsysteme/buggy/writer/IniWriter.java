@@ -61,7 +61,7 @@ public class IniWriter extends Writer {
 		this(null);
 	}
 	
-	protected IniWriter(OutputStream out) {
+	public IniWriter(OutputStream out) {
 		super(out);
 		bwriter = new BufferedWriter(new OutputStreamWriter(out));
 	}
