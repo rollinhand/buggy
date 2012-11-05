@@ -44,7 +44,6 @@ public abstract class Writer {
 		String value = null;
 		try {
 			Method m = ObjectInspector.getInstance().findGetter(data, fieldname);
-			System.out.println("Method: " + m);
 			Object result = null;
 			if (m == null) {
 				m = ObjectInspector.getInstance().findFallBackMethod(data.getClass(), fieldname, TYPE.GET); 
