@@ -17,55 +17,70 @@
  ***************************************************************************/
 package de.bergsysteme.buggy.writer;
 
-import java.io.BufferedWriter;
+import static org.junit.Assert.fail;
+
+import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
-import java.io.OutputStreamWriter;
 
-import de.bergsysteme.buggy.resolve.Field;
+import junit.framework.Assert;
 
-/***
- * Writes the received data to a file in INI-Format.
- * 
- * @author Björn Berg, bjoern.berg@gmx.de
- * @version 1.0
- * @since 2012-10-30
- *
- */
-public class INIWriter extends Writer {
-	private static final String DATASET_FORMAT = "%s = %s";
-	private static final String HEADER_FORMAT = "[%s %d]";
-	private BufferedWriter bwriter;
-	
-	public INIWriter() {
-		this(null);
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
+
+import de.bergsysteme.buggy.Case;
+
+// Simple test for INI writer
+public class IniWriterTest {
+	private static final String INI_TEST_TXT = "ini_test.txt";
+	private String[] fieldnames = {"ixbug", "sTitle"};
+	private Object[] data;
+	private Writer writer;
+	private OutputStream out;
+
+	@Before
+	public void setUp() throws Exception {
+		data = new Case[3];
+		for (int i=0; i < data.length; ++i) {
+			data[i] = createCase(i);
+		}
+		out = new FileOutputStream(INI_TEST_TXT);
+		writer = new IniWriter(out);
 	}
-	
-	protected INIWriter(OutputStream out) {
-		super(out);
-		bwriter = new BufferedWriter(new OutputStreamWriter(out));
+
+	// Factory to create Cases
+	private Object createCase(int i) {
+		Case c = new Case();
+		c.setIxBug(i);
+		c.setsTitle("Fallnummer " + i);
+		return c;
 	}
 
-	@Override
-	public void write(String[] fieldnames, Object[] values) throws IOException {
-		for (int valueIndex=0; valueIndex < values.length; ++valueIndex) {
-			bwriter.write(String.format(HEADER_FORMAT, "Dataset ", valueIndex + 1));
-			for (int fieldIndex=0; fieldIndex < fieldnames.length; ++fieldIndex) {
-				// Get the key for output
-				String fieldname = fieldnames[fieldIndex];
-				String key = Field.translate(fieldname);
-				// Get the value for output
-				Object data = values[valueIndex];
-				String value = getValue(fieldname, data);
-				// Organize data and print it to console
-				bwriter.write(String.format(DATASET_FORMAT, key, value));
-			}
+	@After
+	public void tearDown() throws Exception {
+	}
+
+	@Test
+	public void testClose() {
+		try {
+			writer.close();
+		} catch (IOException e) {
+			fail(e.getMessage());
 		}
 	}
 
-	@Override
-	public void close() throws IOException {
-		bwriter.flush();
-		bwriter.close();		
+	@Test
+	public void testWrite() {
+		try {
+			writer.write(fieldnames, data);
+			writer.close();
+			File f = new File(INI_TEST_TXT);
+			Assert.assertTrue(f.exists());
+			Assert.assertTrue(f.length() > 100);
+		} catch (IOException e) {
+			fail(e.getMessage());
+		}
 	}
 }
