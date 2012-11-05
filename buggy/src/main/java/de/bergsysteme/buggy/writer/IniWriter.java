@@ -25,23 +25,43 @@ import java.io.OutputStreamWriter;
 import de.bergsysteme.buggy.resolve.Field;
 
 /***
- * Writes the received data to a file in INI-Format.
+ * <p>Writes the received data to a file in INI-Format.</p>
+ * 
+ * <p>The INI file format is an informal standard for configuration files for some platforms or software. 
+ * INI files are simple text files with a basic structure composed of "sections" and "properties".</p>
+ * 
+ * <p><b>Properties</b></p>
+ * <p>The basic element contained in an INI file is the property. 
+ * Every property has a name and a value, delimited by an equals sign (=). The name appears to the left 
+ * of the equals sign:</p>
+ * 
+ * <p><code>name=value</code></p>
+ * 
+ * <p><b>Sections</b></p>
+ * <p>Properties may be grouped into arbitrarily named sections. 
+ * The section name appears on a line by itself, in square brackets ([ and ]). 
+ * All properties after the section declaration are associated with that section. There is no explicit 
+ * "end of section" delimiter; sections end at the next section declaration, or the end of the file. 
+ * Sections may not be nested:</p>
+ * 
+ * <p><code>[section]</code></p>
  * 
  * @author Björn Berg, bjoern.berg@gmx.de
  * @version 1.0
  * @since 2012-10-30
  *
  */
-public class INIWriter extends Writer {
+public class IniWriter extends Writer {
 	private static final String DATASET_FORMAT = "%s = %s";
 	private static final String HEADER_FORMAT = "[%s %d]";
 	private BufferedWriter bwriter;
+	private final String LS = System.getProperty("line.separator");
 	
-	public INIWriter() {
+	public IniWriter() {
 		this(null);
 	}
 	
-	protected INIWriter(OutputStream out) {
+	public IniWriter(OutputStream out) {
 		super(out);
 		bwriter = new BufferedWriter(new OutputStreamWriter(out));
 	}
@@ -49,7 +69,8 @@ public class INIWriter extends Writer {
 	@Override
 	public void write(String[] fieldnames, Object[] values) throws IOException {
 		for (int valueIndex=0; valueIndex < values.length; ++valueIndex) {
-			bwriter.write(String.format(HEADER_FORMAT, "Dataset ", valueIndex + 1));
+			bwriter.write(String.format(HEADER_FORMAT, "Dataset", valueIndex + 1));
+			bwriter.write(LS);
 			for (int fieldIndex=0; fieldIndex < fieldnames.length; ++fieldIndex) {
 				// Get the key for output
 				String fieldname = fieldnames[fieldIndex];
@@ -59,7 +80,9 @@ public class INIWriter extends Writer {
 				String value = getValue(fieldname, data);
 				// Organize data and print it to console
 				bwriter.write(String.format(DATASET_FORMAT, key, value));
+				bwriter.write(LS);
 			}
+			bwriter.write(LS);
 		}
 	}
 

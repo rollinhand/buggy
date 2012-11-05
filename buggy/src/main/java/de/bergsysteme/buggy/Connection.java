@@ -37,4 +37,18 @@ public class Connection {
 	public void setServerURL(String serverURL) {
 		this.serverURL = serverURL;
 	}
+	
+	public void setAuthentication(String authentication) {
+		if (authentication.matches(".*/.*@.*")) {
+			int endOfEmail = authentication.indexOf("/");
+			int endOfPwd = authentication.lastIndexOf("@");
+			String email = authentication.substring(0, endOfEmail);
+			String pwd = authentication.substring(endOfEmail + 1, endOfPwd);
+			String host = authentication.substring(endOfPwd + 1);
+			
+			setEmail(email);
+			setPassword(pwd);
+			setServerURL(host);	
+		}
+	}
 }

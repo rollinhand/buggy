@@ -4,12 +4,15 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 import de.bergsysteme.buggy.resolve.ObjectInspector;
 import de.bergsysteme.buggy.resolve.ObjectInspector.TYPE;
 
 public abstract class Writer {
 	protected OutputStream out;
+	SimpleDateFormat sf = new SimpleDateFormat();
 	
 	/***
 	 * Create a new character-stream writer.
@@ -50,7 +53,8 @@ public abstract class Writer {
 				result = m.invoke(data, (Object[])null);
 			}
 			if (result != null) {
-				value = String.valueOf(result);
+				// Conversion operations depending on the current Locale.
+				value = formatResult(result);
 			}
 		} catch (IllegalAccessException e) {
 			e.printStackTrace();
@@ -61,5 +65,23 @@ public abstract class Writer {
 		} finally {
 			return value;
 		}
+	}
+
+	/***
+	 * Formats the result depending on the current used Locale by the
+	 * operating system. Formats floats and Dates.
+	 * @param result returned result by ObjectInspector.
+	 * @return transformed String.
+	 */
+	private String formatResult(Object result) {
+		String value = null;
+		if (result instanceof Date) {
+			value = sf.format((Date)result);
+		} else if (result instanceof Float) {
+			value = String.format("%f", result);
+		} else {
+			value = String.valueOf(result);
+		}
+		return value;
 	}
 }

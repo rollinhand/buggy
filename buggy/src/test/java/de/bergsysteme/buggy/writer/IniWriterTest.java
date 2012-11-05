@@ -17,66 +17,70 @@
  ***************************************************************************/
 package de.bergsysteme.buggy.writer;
 
-import java.io.OutputStream;
-import java.lang.reflect.Constructor;
-import java.util.Hashtable;
+import static org.junit.Assert.fail;
 
-/***
- * Retrieves an instance of {@link Writer} by its given name.
- * 
- * @author Björn Berg, bjoern.berg@gmx.de
- * @version 1.0
- * @since 2012-10-30
- */
-public class WriterFactory {
-	private static WriterFactory _instance;
-	private Hashtable<String, Class<?>> table;
-	
-	private WriterFactory() {
-		this.table = new Hashtable<String, Class<?>>();
-		this.table.put("excel", ExcelWriter.class);
-		this.table.put("console", ConsoleWriter.class);
-		this.table.put("ini", IniWriter.class);
-	}
-	
-	/***
-	 * Returns the instance of {@link WriterFactory}.
-	 * @return current instance of {@link WriterFactory}.
-	 */
-	public static WriterFactory getInstance() {
-		if (_instance == null) {
-			_instance = new WriterFactory();
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.OutputStream;
+
+import junit.framework.Assert;
+
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
+
+import de.bergsysteme.buggy.Case;
+
+// Simple test for INI writer
+public class IniWriterTest {
+	private static final String INI_TEST_TXT = "ini_test.txt";
+	private String[] fieldnames = {"ixbug", "sTitle"};
+	private Object[] data;
+	private Writer writer;
+	private OutputStream out;
+
+	@Before
+	public void setUp() throws Exception {
+		data = new Case[3];
+		for (int i=0; i < data.length; ++i) {
+			data[i] = createCase(i);
 		}
-		return _instance;
+		out = new FileOutputStream(INI_TEST_TXT);
+		writer = new IniWriter(out);
 	}
-	
-	/***
-	 * Returns an instance of {@link Writer}.
-	 * The writer is searched by its name. If the given name is not supported,
-	 * the method will throw an {@link IllegalArgumentException}. In case of an
-	 * error during instantiation of the object appropriate exceptions are thrown.
-	 * @param name name of the writer.
-	 * @return instance of writer.
-	 * @throws IllegalAccessException  
-	 * @throws InstantiationException
-	 */
-	public Writer findWriterByName(String name) 
-	throws Exception {
-		Class<?> clazz = table.get(name);
-		if (clazz == null) {
-			throw new IllegalArgumentException("Writer is not supported: " + name);
-		}
-		return (Writer) clazz.newInstance();
+
+	// Factory to create Cases
+	private Object createCase(int i) {
+		Case c = new Case();
+		c.setIxBug(i);
+		c.setsTitle("Fallnummer " + i);
+		return c;
 	}
-	
-	public Writer findWriterByName(String name, OutputStream out) 
-	throws Exception {
-		Class<?> clazz = table.get(name);
-		if (clazz == null) {
-			throw new IllegalArgumentException("Writer is not supported: " + name);
+
+	@After
+	public void tearDown() throws Exception {
+	}
+
+	@Test
+	public void testClose() {
+		try {
+			writer.close();
+		} catch (IOException e) {
+			fail(e.getMessage());
 		}
-		Constructor<?> constructor = clazz.getConstructor(OutputStream.class);
-		return (Writer)constructor.newInstance(out);
-		//return (Writer) clazz.newInstance();
+	}
+
+	@Test
+	public void testWrite() {
+		try {
+			writer.write(fieldnames, data);
+			writer.close();
+			File f = new File(INI_TEST_TXT);
+			Assert.assertTrue(f.exists());
+			Assert.assertTrue(f.length() > 100);
+		} catch (IOException e) {
+			fail(e.getMessage());
+		}
 	}
 }
