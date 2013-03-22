@@ -1,0 +1,12 @@
+[Dataset 1]
+Fall = 0
+Titel = Fallnummer 0
+
+[Dataset 2]
+Fall = 1
+Titel = Fallnummer 1
+
+[Dataset 3]
+Fall = 2
+Titel = Fallnummer 2
+
