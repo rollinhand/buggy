@@ -2,7 +2,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>de.bergsysteme.buggy</groupId>
   <artifactId>buggy</artifactId>
-  <version>0.0.1-SNAPSHOT</version>
+  <version>1.0.0-SNAPSHOT</version>
   <name>FogBugz API</name>
   <dependencies>
   	<dependency>
@@ -64,14 +64,6 @@
   	<name>Berg Systeme</name>
   	<url>http://www.berg-systeme.de</url>
   </organization>
-  <description>Greift auf die XML-Schnittstelle von FogBugz zu, um Informationen aus dem Issue-Management abfragen zu können. Die XML-Daten werden durch einen SAXParser aufbereitet und können dazu benutzt werden, die Daten in andere Dateiformate zu konvertieren.
-
-Momentan werden die Dateiformate CSV und LaTex unterstützt. LaTex ist nur für die ReleaseNotes-Funktionalität von FogBugz implementiert.</description>
+  <description>Uses XML interface of FogBugz to retrieve information from issue management. XML answers are parsed by an instance of a SAX parser and can be used to convert the output to other file formats like Excel, CSV or INI.</description>
   <url>http://fogbugz.berg-systeme.de</url>
-  <parent>
-  	<groupId>de.bergsysteme</groupId>
-  	<artifactId>general</artifactId>
-  	<version>1.0.0-SNAPSHOT</version>
-  	<relativePath>../bergsysteme</relativePath>
-  </parent>
 </project>
