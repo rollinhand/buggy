@@ -48,15 +48,83 @@
         <artifactId>maven-pmd-plugin</artifactId>
         <version>2.7.1</version>
       </plugin>
+      <plugin>
+      	<groupId>org.apache.maven.plugins</groupId>
+      	<artifactId>maven-site-plugin</artifactId>
+      	<version>3.1</version>
+      	<configuration> 
+      		<locales>de,en</locales> 
+      	</configuration>
+      </plugin>
     </plugins>
   </build>
-  <reporting>
+ <reporting>
     <plugins>
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-checkstyle-plugin</artifactId>
-        <version>2.9.1</version>
-      </plugin>
+    	<plugin> 
+    		<groupId>org.apache.maven.plugins</groupId> 
+    		<artifactId>maven-javadoc-plugin</artifactId> 
+    		<version>2.8.1</version> 
+    	</plugin>
+    	<plugin> 
+    		<groupId>org.apache.maven.plugins</groupId>
+    		<artifactId>maven-jxr-plugin</artifactId> 
+    		<version>2.3</version>
+    		<configuration> 
+    			<linkJavadoc>false</linkJavadoc> 
+    			<javadocDir>/apidocs/</javadocDir> 
+    		</configuration> </plugin>
+    	<plugin>
+    		<groupId>org.apache.maven.plugins</groupId> 
+    		<artifactId>maven-surefire-report-plugin</artifactId> 
+    		<version>2.12</version> 
+    	</plugin>
+    	<plugin>
+    		<groupId>org.codehaus.mojo</groupId> 
+    		<artifactId>cobertura-maven-plugin</artifactId>
+    		<version>2.5.1</version>
+    	</plugin>
+    	<plugin> 
+    		<groupId>org.apache.maven.plugins</groupId> 
+    		<artifactId>maven-pmd-plugin</artifactId> 
+    		<version>2.7.1</version>
+    		<configuration> 
+    			<targetJdk>1.6</targetJdk> 
+    			<format>xml</format> 
+    			<linkXRef>true</linkXRef> 
+    			<sourceEncoding>utf-8</sourceEncoding> 
+    			<minimumTokens>10</minimumTokens>
+    			<excludes> 
+    				<excluds>**/generated/*.java</excluds> 
+    			</excludes> 
+    		</configuration> 
+    	</plugin>
+    	<plugin> 
+    		<groupId>org.apache.maven.plugins</groupId>
+    		<artifactId>maven-checkstyle-plugin</artifactId> 
+    		<version>2.9.1</version> 
+    	</plugin>
+    	<plugin>
+    		<groupId>org.codehaus.mojo</groupId> 
+    		<artifactId>findbugs-maven-plugin</artifactId> 
+    		<version>2.4.0</version> 
+    	</plugin>
+    	<plugin> 
+    		<groupId>org.apache.maven.plugins</groupId>
+    		<artifactId>maven-changes-plugin</artifactId> 
+    		<version>2.7.1</version>
+    	</plugin> 
+		<plugin> 
+			<groupId>org.codehaus.mojo</groupId>
+			<artifactId>taglist-maven-plugin</artifactId>
+			<version>2.4</version>
+			<configuration>
+				<tags> 
+					<tag>TODO</tag> 
+					<tag>FixMe</tag> 
+					<tag>xxx</tag> 
+				</tags> 
+			</configuration>
+		</plugin>
     </plugins>
   </reporting>
   
@@ -64,6 +132,8 @@
   	<name>Berg Systeme</name>
   	<url>http://www.berg-systeme.de</url>
   </organization>
-  <description>Uses XML interface of FogBugz to retrieve information from issue management. XML answers are parsed by an instance of a SAX parser and can be used to convert the output to other file formats like Excel, CSV or INI.</description>
-  <url>http://fogbugz.berg-systeme.de</url>
+  <description>Greift auf die XML-Schnittstelle von FogBugz zu, um Informationen aus dem Issue-Management abfragen zu können. Die XML-Daten werden durch einen SAXParser aufbereitet und können dazu benutzt werden, die Daten in andere Dateiformate zu konvertieren.
+
+Momentan werden die Dateiformate CSV und LaTex unterstützt. LaTex ist nur für die ReleaseNotes-Funktionalität von FogBugz implementiert.</description>
+  <url>http://buggy.berg-systeme.de</url>
 </project>
