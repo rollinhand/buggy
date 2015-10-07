@@ -42,6 +42,8 @@ public abstract class DefaultCommand implements ICommand {
 		ResponseResolver r = (ResponseResolver) ch;
 		r.removeListener(listener);
 	}
+	
+	public abstract String getCommand();
 
 	@Override
 	public String toString() {

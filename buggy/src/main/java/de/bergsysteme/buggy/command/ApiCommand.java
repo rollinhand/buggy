@@ -6,5 +6,4 @@ public class ApiCommand extends DefaultCommand {
 	public String getCommand() {
 		return cmd;
 	}
-
 }

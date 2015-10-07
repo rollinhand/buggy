@@ -234,7 +234,6 @@ public class FogBugz implements ResolverListener {
 		}
 	}
 	
-	@Override
 	public void notify(List<Object> l) {
 		// Do the writing...
 		try {
