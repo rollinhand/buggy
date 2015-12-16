@@ -12,7 +12,7 @@ public class PriorityTest {
 	private Priority naked;
 	private Priority filled;
 	
-	private static final String DEF_PRIO_TEXT = "Meine Priorit‰t";
+	private static final String DEF_PRIO_TEXT = "Meine Priorit√§t";
 	private static final int DEF_PRIO_ID = 30;
 	
 	@Before

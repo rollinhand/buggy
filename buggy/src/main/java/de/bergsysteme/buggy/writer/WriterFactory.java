@@ -24,7 +24,7 @@ import java.util.Hashtable;
 /***
  * Retrieves an instance of {@link Writer} by its given name.
  * 
- * @author Björn Berg, bjoern.berg@gmx.de
+ * @author BjÃ¶rn Berg, bjoern.berg@gmx.de
  * @version 1.0
  * @since 2012-10-30
  */

@@ -1,10 +1,8 @@
 package de.bergsysteme.buggy.command;
 
-public class ListPeopleCommand extends DefaultCommand {
-
+public class ListPeopleCommand extends ListCommand {
 	@Override
-	public String getCommand() {
+	protected String getListCmd() {
 		return "listPeople";
 	}
-
 }

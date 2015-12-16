@@ -15,9 +15,9 @@ import java.util.Properties;
 import de.bergsysteme.buggy.resolve.ObjectInspector;
 
 /***
- * {@link LaTeXPrinter} unterstützt die Erstellung von LaTeX-Dokumenten. Hierbei
- * handelt es sich um LaTeX-Artefakte, die in andere Dateien inkludiert werden können.
- * Der äußere Rahmen zum Kompilieren der Tex-Datei
+ * {@link LaTeXPrinter} unterstÃ¼tzt die Erstellung von LaTeX-Dokumenten. Hierbei
+ * handelt es sich um LaTeX-Artefakte, die in andere Dateien inkludiert werden kÃ¶nnen.
+ * Der Ã¤uÃŸere Rahmen zum Kompilieren der Tex-Datei
  * @author rollinhand
  *
  */

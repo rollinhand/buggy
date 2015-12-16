@@ -45,7 +45,7 @@ import de.bergsysteme.buggy.resolve.Processor;
  * </ul>
  * The printer is pre-configured with the generic options to generate an Excel-conform CSV file.
  * 
- * @author Björn Berg, bjoern.berg@gmx.de
+ * @author BjÃ¶rn Berg, bjoern.berg@gmx.de
  * @version 1.0
  * @since 2012-07-31
  */

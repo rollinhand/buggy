@@ -24,7 +24,7 @@ import de.bergsysteme.buggy.writer.Writer;
 /***
  * Retrieves an instance of {@link IPrinter} by its given name.
  * 
- * @author Björn Berg, bjoern.berg@gmx.de
+ * @author BjÃ¶rn Berg, bjoern.berg@gmx.de
  * @version 1.0
  * @since 2012-07-31
  * @deprecated use {@link Writer} interface.

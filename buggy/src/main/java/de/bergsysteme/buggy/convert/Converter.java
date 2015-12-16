@@ -104,4 +104,8 @@ implements ResolverListener, IConverter {
 	public abstract void execute();
 	
 	protected abstract void print(List<Object> list);
+	
+	public Connection getConnection() {
+		return this.connection;
+	}
 }

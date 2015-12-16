@@ -46,7 +46,7 @@ import de.bergsysteme.buggy.resolve.Field;
  * 
  * <p><code>[section]</code></p>
  * 
- * @author Björn Berg, bjoern.berg@gmx.de
+ * @author BjÃ¶rn Berg, bjoern.berg@gmx.de
  * @version 1.0
  * @since 2012-10-30
  *

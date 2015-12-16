@@ -30,12 +30,14 @@ import de.bergsysteme.buggy.Token;
 import de.bergsysteme.buggy.command.ApiCommand;
 import de.bergsysteme.buggy.command.ICommand;
 import de.bergsysteme.buggy.command.LoginCommand;
+import de.bergsysteme.buggy.convert.Converter;
+import de.bergsysteme.buggy.convert.IConverter;
 
 /***
  * The {@link Processor} is the main routine handling the commands. It is designed
  * as Facade- and Singleton-Pattern.
  * 
- * @author Björn Berg, bjoern.berg@gmx.de
+ * @author Bj≈°rn Berg, bjoern.berg@gmx.de
  * @version 1.0
  *
  */
@@ -79,6 +81,10 @@ public class Processor implements ResolverListener {
 
 	public static void setConnection(Connection connection) {
 		getInstance().connection = connection;
+	}
+	
+	public static void setConnection(Converter converter) {
+		getInstance().connection = converter.getConnection();
 	}
 	
 	private static Token getToken() {

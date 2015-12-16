@@ -33,13 +33,13 @@ public class URLFetcher {
 	
 	private void initEscapeMap() {
 		escapeMap = new Hashtable<String, String>();
-		escapeMap.put("Ä", "%C4");
-		escapeMap.put("Ü", "%DC");
-		escapeMap.put("Ö", "%D6");
-		escapeMap.put("ä", "%E4");
-		escapeMap.put("ü", "%FC");
-		escapeMap.put("ö", "%F6");
-		escapeMap.put("ß", "%DF");		
+		escapeMap.put("Ã„", "%C4");
+		escapeMap.put("Ãœ", "%DC");
+		escapeMap.put("Ã–", "%D6");
+		escapeMap.put("Ã¤", "%E4");
+		escapeMap.put("Ã¼", "%FC");
+		escapeMap.put("Ã¶", "%F6");
+		escapeMap.put("ÃŸ", "%DF");		
 		escapeMap.put(" ", "%20");
 		escapeMap.put(";", "%3B");
 		escapeMap.put("\\|", "%7C");
