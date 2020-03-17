@@ -24,11 +24,12 @@ import java.io.PrintWriter;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.Hashtable;
-import org.apache.log4j.Logger;
+
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import de.bergsysteme.buggy.Messages;
 import de.bergsysteme.buggy.resolve.ObjectInspector;
-import de.bergsysteme.buggy.resolve.Processor;
 
 /***
  * Prints the content of FogBugz elements as CSV file.
@@ -49,6 +50,7 @@ import de.bergsysteme.buggy.resolve.Processor;
  * @version 1.0
  * @since 2012-07-31
  */
+@SuppressWarnings("deprecation")
 public class CSVPrinter implements IPrinter {
 	// Static declarations for properties
 	private static final String DATASET_DELIMITER = "csv.datasetDelimiter";
@@ -71,7 +73,7 @@ public class CSVPrinter implements IPrinter {
 	}
 	
 	public CSVPrinter() {
-		this.logger = Logger.getRootLogger();
+		this.logger = LogManager.getRootLogger();
 		this.availableColumns = null;
 		properties = new Hashtable<String, String>();
 		properties.put(DATASET_DELIMITER, System.getProperty("line.separator"));

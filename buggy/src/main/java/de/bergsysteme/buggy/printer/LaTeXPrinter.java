@@ -16,13 +16,14 @@ import de.bergsysteme.buggy.resolve.ObjectInspector;
 
 /***
  * {@link LaTeXPrinter} unterstützt die Erstellung von LaTeX-Dokumenten. Hierbei
- * handelt es sich um LaTeX-Artefakte, die in andere Dateien inkludiert werden können.
- * Der äußere Rahmen zum Kompilieren der Tex-Datei
+ * handelt es sich um LaTeX-Artefakte, die in andere Dateien inkludiert werden
+ * können. Der äußere Rahmen zum Kompilieren der Tex-Datei
+ * 
  * @author rollinhand
  *
  */
-public class LaTeXPrinter 
-implements IPrinter {
+@SuppressWarnings("deprecation")
+public class LaTeXPrinter implements IPrinter {
 	private static final String DEFAULT_SECTION_AGGREGATION = "\\section*{(%s) %s}";
 	private static final String DEFAULT_CHAPTER_AGGREGATION = "\\chapter*{(%s) %s}";
 	private static final String DEFAULT_PARAGRAPH_AGGREGATION = "%s";
@@ -33,13 +34,13 @@ implements IPrinter {
 	public static final String CHAPTER_CONTENT = "chapter.content";
 	public static final String PARAGRAPH_FIELDS = "paragraph.fields";
 	public static final String FILE = "file";
-	
-	private Hashtable<String,String> table;
-	
+
+	private Hashtable<String, String> table;
+
 	private Properties properties;
-	
+
 	private BufferedWriter out;
-	
+
 	public LaTeXPrinter() {
 		table = new Hashtable<String, String>();
 		setProperty(SECTION_AGGREGATION, DEFAULT_SECTION_AGGREGATION);
@@ -50,21 +51,21 @@ implements IPrinter {
 		setProperty(PARAGRAPH_FIELDS, "");
 		try {
 			properties = new Properties();
-			InputStream is = ClassLoader.getSystemResourceAsStream("charset.properties");			
+			InputStream is = ClassLoader.getSystemResourceAsStream("charset.properties");
 			properties.load(is);
-		
+
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
 	}
-	
+
 	public void print(String[] columns, Object[] data) throws Exception {
-		String filename = getProperty(FILE, "releasenote.tex");  
-		out = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(new File(filename)),"UTF8"));
+		String filename = getProperty(FILE, "releasenote.tex");
+		out = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(new File(filename)), "UTF8"));
 		printChapter();
-		for (int i=0; i < data.length; ++i) {
+		for (int i = 0; i < data.length; ++i) {
 			Object obj = data[i];
 			printSection(obj);
 			printParagraph(obj);
@@ -72,16 +73,16 @@ implements IPrinter {
 		}
 		out.close();
 	}
-	
+
 	private Object[] fetchData(String[] fields, Object o) {
 		int length = fields.length;
 		Object[] result = new Object[length];
 		try {
-			for (int i=0; i < length; ++i) {
+			for (int i = 0; i < length; ++i) {
 				String field = fields[i];
 				Method m = ObjectInspector.getInstance().findGetter(o, field);
 				if (m != null) {
-					Object line = m.invoke(o, (Object[])null);
+					Object line = m.invoke(o, (Object[]) null);
 					result[i] = replaceCharacters(String.valueOf(line));
 				}
 			}
@@ -94,7 +95,7 @@ implements IPrinter {
 		}
 		return result;
 	}
-	
+
 	private String replaceCharacters(String line) {
 		String[] keys = (String[]) properties.keySet().toArray(new String[0]);
 		for (String pattern : keys) {
@@ -103,32 +104,32 @@ implements IPrinter {
 		}
 		return line;
 	}
-	
+
 	protected void printSection(Object o) throws IOException {
 		String sectionAggregation = getProperty(SECTION_AGGREGATION, DEFAULT_SECTION_AGGREGATION);
 		String fieldsInProperty = getProperty(SECTION_FIELDS);
 		String[] fields = fieldsInProperty.split(",");
 		Object[] data = fetchData(fields, o);
-		String section = String.format(sectionAggregation, (Object[])data);
+		String section = String.format(sectionAggregation, (Object[]) data);
 		out.write(section);
 		out.write("\r\n");
 	}
-	
+
 	protected void printParagraph(Object o) throws IOException {
 		String paragraphAggregation = getProperty(PARAGRAPH_AGGREGATION, DEFAULT_PARAGRAPH_AGGREGATION);
 		String fieldsInProperty = getProperty(PARAGRAPH_FIELDS);
 		String[] fields = fieldsInProperty.split(",");
 		Object[] data = fetchData(fields, o);
-		String paragraph = String.format(paragraphAggregation, (Object[])data);
+		String paragraph = String.format(paragraphAggregation, (Object[]) data);
 		out.write(paragraph);
 		out.write("\r\n");
 	}
-	
+
 	protected void printChapter() throws IOException {
 		String chapterAggregation = getProperty(CHAPTER_AGGREGATION, DEFAULT_CHAPTER_AGGREGATION);
 		String fieldsInProperty = getProperty(CHAPTER_CONTENT);
 		String[] fields = fieldsInProperty.split(",");
-		String chapter = String.format(chapterAggregation, (Object[])fields);
+		String chapter = String.format(chapterAggregation, (Object[]) fields);
 		out.write(chapter);
 		out.write("\r\n");
 	}
@@ -142,8 +143,9 @@ implements IPrinter {
 	}
 
 	public String getProperty(String key, String defaultValue) {
-		String value = getProperty(key); 
-		if (value == null) value = defaultValue;
+		String value = getProperty(key);
+		if (value == null)
+			value = defaultValue;
 		return value;
 	}
 

@@ -23,32 +23,31 @@ import java.util.Hashtable;
 import de.bergsysteme.buggy.Messages;
 import de.bergsysteme.buggy.resolve.ObjectInspector;
 
-public class ConsolePrinter 
-implements IPrinter {
+@SuppressWarnings("deprecation")
+public class ConsolePrinter implements IPrinter {
 	private static final String CONSOLE_FORMAT = "%s = %s";
 	private static final String FIELD_FORMAT = "Field.%s";
 	private static final String FORMAT_KEY = "console.format";
-	
+
 	private Hashtable<String, String> table;
-	
+
 	public ConsolePrinter() {
 		table = new Hashtable<String, String>();
 		table.put(FORMAT_KEY, CONSOLE_FORMAT);
 	}
 
-	public void print(String[] columns, Object[] data) 
-	throws Exception {
+	public void print(String[] columns, Object[] data) throws Exception {
 		int fieldLength = columns.length;
 		int size = data.length;
-		
-		for (int d=0; d < size; ++d) {
-			for (int f=0; f < fieldLength; ++f) {
+
+		for (int d = 0; d < size; ++d) {
+			for (int f = 0; f < fieldLength; ++f) {
 				String field = String.format(FIELD_FORMAT, columns[f].toLowerCase());
 				String name = Messages.getString(field);
 				Method m = ObjectInspector.getInstance().findGetter(data[d], columns[f]);
 				String line = null;
 				if (m != null) {
-					Object result = m.invoke(data[d], (Object[])null);
+					Object result = m.invoke(data[d], (Object[]) null);
 					line = String.format(getConsoleFormat(), name, result);
 				} else {
 					line = String.format(getConsoleFormat(), name, "");
@@ -57,7 +56,7 @@ implements IPrinter {
 			}
 		}
 	}
-	
+
 	private String getConsoleFormat() {
 		return getProperty(FORMAT_KEY, CONSOLE_FORMAT);
 	}
@@ -73,7 +72,8 @@ implements IPrinter {
 	public String getProperty(String key, String defaultValue) {
 		String value = null;
 		value = getProperty(key);
-		if (value == null) value = defaultValue;
+		if (value == null)
+			value = defaultValue;
 		return value;
 	}
 

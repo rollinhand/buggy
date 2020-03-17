@@ -1,6 +1,7 @@
 package de.bergsysteme.buggy.command;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.xml.sax.ContentHandler;
 import org.xml.sax.InputSource;
 import org.xml.sax.XMLReader;
@@ -11,8 +12,9 @@ import de.bergsysteme.buggy.resolve.ResolverListener;
 import de.bergsysteme.buggy.resolve.ResponseResolver;
 
 public abstract class DefaultCommand implements ICommand {
-	Logger logger = Logger.getRootLogger();
-	ContentHandler ch;
+	private Logger logger = LogManager.getRootLogger();
+	private ContentHandler ch;
+	
 	public DefaultCommand() {
 		 ch = new ResponseResolver();
 	}
@@ -21,7 +23,7 @@ public abstract class DefaultCommand implements ICommand {
 		try {
 			InputSource is = new InputSource(uri);
 			XMLReader parser = XMLReaderFactory.createXMLReader();
-			parser.setProperty("http://apache.org/xml/properties/input-buffer-size", new Integer(2048));
+			parser.setProperty("http://apache.org/xml/properties/input-buffer-size", 2048);
 
 			// Configure Parser
 			parser.setContentHandler(ch);

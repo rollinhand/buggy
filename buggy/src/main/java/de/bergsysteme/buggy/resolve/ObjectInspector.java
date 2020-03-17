@@ -1,7 +1,9 @@
 package de.bergsysteme.buggy.resolve;
 
 import java.lang.reflect.Method;
-import org.apache.log4j.Logger;
+
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 public class ObjectInspector {
 	private Logger logger;
@@ -12,7 +14,7 @@ public class ObjectInspector {
 	
 	private ObjectInspector() {
 		this.cache = new ObjectCache();
-		logger = Logger.getRootLogger();
+		logger = LogManager.getRootLogger();
 	}
 
 	public static ObjectInspector getInstance() {

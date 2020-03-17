@@ -1,12 +1,13 @@
 package de.bergsysteme.buggy.printer;
 
 import static org.junit.Assert.*;
-import junit.framework.Assert;
 
+import org.junit.Assert;
 import org.junit.Test;
 
 import de.bergsysteme.buggy.printer.PrinterFactory;
 
+@SuppressWarnings("deprecation")
 public class PrinterFactoryTest {
 
 	@Test

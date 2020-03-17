@@ -19,7 +19,8 @@ package de.bergsysteme.buggy.resolve;
 
 import java.util.List;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import de.bergsysteme.buggy.Api;
 import de.bergsysteme.buggy.Connection;
@@ -31,7 +32,6 @@ import de.bergsysteme.buggy.command.ApiCommand;
 import de.bergsysteme.buggy.command.ICommand;
 import de.bergsysteme.buggy.command.LoginCommand;
 import de.bergsysteme.buggy.convert.Converter;
-import de.bergsysteme.buggy.convert.IConverter;
 
 /***
  * The {@link Processor} is the main routine handling the commands. It is designed
@@ -65,7 +65,7 @@ public class Processor implements ResolverListener {
 		token = new Token();	// empty Dummy
 		
 		// Instantiate Logger
-		logger = Logger.getRootLogger();
+		logger = LogManager.getRootLogger();
 	}
 	
 	protected static Processor getInstance() {

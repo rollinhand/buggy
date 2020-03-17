@@ -3,9 +3,9 @@ package de.bergsysteme.buggy.resolve;
 import java.lang.reflect.Method;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.logging.Level;
-import org.apache.log4j.Logger;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 import org.xml.sax.helpers.DefaultHandler;
@@ -40,7 +40,7 @@ public class ResponseResolver extends DefaultHandler {
 		setterName = null;
 		
 		// instantiate Logger
-		logger = Logger.getRootLogger();
+		logger = LogManager.getRootLogger();
 		logger.info("Current log level: " + logger.getLevel());
 	}
 	

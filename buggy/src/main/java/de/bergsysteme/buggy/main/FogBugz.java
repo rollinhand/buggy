@@ -16,8 +16,9 @@ import org.apache.commons.cli.OptionBuilder;
 import org.apache.commons.cli.Options;
 import org.apache.commons.cli.ParseException;
 import org.apache.commons.lang.StringUtils;
-import org.apache.log4j.Level;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.Level;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import de.bergsysteme.buggy.Connection;
 import de.bergsysteme.buggy.FogBugzException;
@@ -43,8 +44,8 @@ public class FogBugz implements ResolverListener {
 	
 	public FogBugz() {
 		this.queries = new LinkedList<String>();
-		this.logger = Logger.getRootLogger();
-		logger.setLevel(Level.TRACE);
+		this.logger = LogManager.getRootLogger();
+		logger.atLevel(Level.TRACE);
 		this.connection = new Connection();
 		buildOptions();
 	}

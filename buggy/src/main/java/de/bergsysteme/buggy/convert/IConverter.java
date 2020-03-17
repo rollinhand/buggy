@@ -1,6 +1,5 @@
 package de.bergsysteme.buggy.convert;
 
-import de.bergsysteme.buggy.printer.IPrinter;
 import de.bergsysteme.buggy.resolve.ResolverListener;
 
 public interface IConverter
@@ -47,7 +46,7 @@ extends ResolverListener {
 
 	/***
 	 * Executes the converter with the given settings and properties.
-	 * The conversion is printed to the given {@link IPrinter}.
+	 * The conversion is printed.
 	 */
 	public abstract void execute();
 }

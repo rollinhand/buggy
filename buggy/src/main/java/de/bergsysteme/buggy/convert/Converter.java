@@ -2,13 +2,12 @@ package de.bergsysteme.buggy.convert;
 
 import java.util.Hashtable;
 import java.util.List;
-import java.util.logging.Level;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import de.bergsysteme.buggy.Connection;
 import de.bergsysteme.buggy.Error;
-import de.bergsysteme.buggy.resolve.Processor;
 import de.bergsysteme.buggy.resolve.ResolverListener;
 
 public abstract class Converter
@@ -20,7 +19,7 @@ implements ResolverListener, IConverter {
 	protected Hashtable<String, String> table;
 	
 	public Converter() {
-		logger = Logger.getRootLogger();
+		logger = LogManager.getRootLogger();
 		table = new Hashtable<String, String>();
 		table.put(PROPERTY_FIELDS, "");
 		table.put(PROPERTY_QUERY, "");

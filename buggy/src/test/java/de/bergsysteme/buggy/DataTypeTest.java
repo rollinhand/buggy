@@ -2,9 +2,8 @@ package de.bergsysteme.buggy;
 
 import java.util.Date;
 
-import junit.framework.Assert;
-
 import org.junit.After;
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -37,8 +36,8 @@ public class DataTypeTest {
 
 	@Test
 	public void testToFloat() {
-		Assert.assertEquals((float)100.111, (float)DataType.toFloat("100.111"));
-		Assert.assertEquals((float)1.222, (float)DataType.toFloat("1.222"));
+		Assert.assertEquals((float)100.111, (float)DataType.toFloat("100.111"), 0);
+		Assert.assertEquals((float)1.222, (float)DataType.toFloat("1.222"), 0);
 	}
 
 	@Test
